@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sweets Ordering App</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff8f0; }
+    header { display: flex; justify-content: space-between; align-items: center; background: #ff9800; color: white; padding: 1rem; }
+    h1 { margin: 0; font-size: 1.5rem; }
+    #cart-icon { font-size: 1.5rem; cursor: pointer; position: relative; }
+    #cart-count { position: absolute; top: -10px; right: -10px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; }
+    #menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 1rem; }
+    .sweet-card { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sweet-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; }
+    .sweet-card h3 { margin: 0.5rem 0 0.25rem; }
+    .sweet-card select, .sweet-card button { width: 100%; margin-top: 0.5rem; padding: 0.5rem; border-radius: 4px; }
+    #cart { padding: 1rem; background: #fff3e0; position: sticky; bottom: 0; }
+    #cart-items { list-style: none; padding: 0; margin: 0 0 1rem 0; }
+    #cart-items li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Order Your Favorite Sweets</h1>
+    <div id="cart-icon">🛒<span id="cart-count">0</span></div>
+  </header>
+
+  <main id="menu"></main>
+
+  <section id="cart">
+    <h2>Order Summary</h2>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: ₹0</p>
+    <button onclick="clearCart()">Clear Cart</button>
+  </section>
+
+  <script>
+    const sweets = [
+      {
+        name: "Bellam Sunnundalu",
+        image: "https://via.placeholder.com/300x200?text=Bellam+Sunnundalu",
+        options: [
+          { weight: "250gm", price: 150 },
+          { weight: "500gm", price: 260 },
+          { weight: "1kg", price: 500 }
+        ]
+      },
+      {
+        name: "Sugar Sunnundalu",
+        image: "https://via.placeholder.com/300x200?text=Sugar+Sunnundalu",
+        options: [
+          { weight: "250gm", price: 120 },
+          { weight: "500gm", price: 240 },
+          { weight: "1kg", price: 450 }
+        ]
+      },
+      {
+        name: "Bellam Putharekulu",
+        image: "https://via.placeholder.com/300x200?text=Bellam+Putharekulu",
+        options: [
+          { weight: "10 pieces", price: 150 },
+          { weight: "10 pcs w/ dry fruit", price: 280 },
+          { weight: "20 pieces", price: 280 },
+          { weight: "20 pcs w/ dry fruit", price: 530 }
+        ]
+      },
+      {
+        name: "Sugar Putharekulu",
+        image: "https://via.placeholder.com/300x200?text=Sugar+Putharekulu",
+        options: [
+          { weight: "10 pieces", price: 130 },
+          { weight: "10 pcs w/ dry fruit", price: 250 },
+          { weight: "20 pieces", price: 250 },
+          { weight: "20 pcs w/ dry fruit", price: 480 }
+        ]
+      },
+      {
+        name: "Kobbari Undalu",
+        image: "https://via.placeholder.com/300x200?text=Kobbari+Undalu",
+        options: [
+          { weight: "250gm", price: 100 },
+          { weight: "500gm", price: 180 },
+          { weight: "1kg", price: 350 }
+        ]
+      },
+      {
+        name: "Motichoor Laddu",
+        image: "https://via.placeholder.com/300x200?text=Motichoor+Laddu",
+        options: [
+          { weight: "250gm", price: 100 },
+          { weight: "500gm", price: 180 },
+          { weight: "1kg", price: 350 }
+        ]
+      },
+      {
+        name: "Bundhi Laddu",
+        image: "https://via.placeholder.com/300x200?text=Bundhi+Laddu",
+        options: [
+          { weight: "250gm", price: 100 },
+          { weight: "500gm", price: 180 },
+          { weight: "1kg", price: 350 }
+        ]
+      },
+      {
+        name: "Ravva Laddu",
+        image: "https://via.placeholder.com/300x200?text=Ravva+Laddu",
+        options: [
+          { weight: "250gm", price: 100 },
+          { weight: "500gm", price: 180 },
+          { weight: "1kg", price: 350 }
+        ]
+      },
+      {
+        name: "Mavidi Tandri",
+        image: "https://via.placeholder.com/300x200?text=Mavidi+Tandri",
+        options: [
+          { weight: "250gm", price: 100 },
+          { weight: "500gm", price: 180 },
+          { weight: "1kg", price: 350 }
+        ]
+      },
+      {
+        name: "Palakova",
+        image: "https://via.placeholder.com/300x200?text=Palakova",
+        options: [
+          { weight: "250gm", price: 200 },
+          { weight: "500gm", price: 380 },
+          { weight: "1kg", price: 750 }
+        ]
+      },
+      {
+        name: "Bobbatlu",
+        image: "https://via.placeholder.com/300x200?text=Bobbatlu",
+        options: [
+          { weight: "10 pieces", price: 100 },
+          { weight: "20 pieces", price: 180 }
+        ]
+      }
+    ];
+
+    const menu = document.getElementById('menu');
+    const cartItems = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    const cartCount = document.getElementById('cart-count');
+
+    const cart = JSON.parse(localStorage.getItem('sweet-cart')) || [];
+
+    function saveCart() {
+      localStorage.setItem('sweet-cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function addToCart(name, weight, price) {
+      cart.push({ name, weight, price });
+      saveCart();
+    }
+
+    function renderCart() {
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} (${item.weight}) - ₹${item.price}`;
+        cartItems.appendChild(li);
+        total += item.price;
+      });
+      cartTotal.textContent = `Total: ₹${total}`;
+      cartCount.textContent = cart.length;
+    }
+
+    function clearCart() {
+      localStorage.removeItem('sweet-cart');
+      cart.length = 0;
+      renderCart();
+    }
+
+    function renderMenu() {
+      sweets.forEach(sweet => {
+        const card = document.createElement('div');
+        card.className = 'sweet-card';
+        card.innerHTML = `
+          <img src="${sweet.image}" alt="${sweet.name}" />
+          <h3>${sweet.name}</h3>
+          <select id="${sweet.name}-select">
+            ${sweet.options.map(opt => `<option value="${opt.price}">${opt.weight} - ₹${opt.price}</option>`).join('')}
+          </select>
+          <button onclick="addToCart(\"${sweet.name}\", document.getElementById(\"${sweet.name}-select\").selectedOptions[0].text.split(' - ')[0], parseInt(document.getElementById(\"${sweet.name}-select\").value))">Add to Cart</button>
+        `;
+        menu.appendChild(card);
+      });
+    }
+
+    renderMenu();
+    renderCart();
+  </script>
+</body>
+</html>

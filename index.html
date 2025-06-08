@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vijaya Jyothi Home Foods - Traditional Indian Sweets</title>
+    <meta name="description" content="Premium traditional Indian sweets including Sunundalu, Putharekulu and more from Vijaya Jyothi Home Foods">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/products.css">
+    <link rel="stylesheet" href="styles/cart.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1 class="logo-text">Vijaya Jyothi</h1>
+                    <p class="logo-subtitle">Home Foods</p>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn" onclick="scrollToSection('products')">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </button>
+                    <button class="nav-btn" onclick="scrollToSection('about')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Authentic Traditional Indian Sweets</h2>
+                <p class="hero-subtitle">Handcrafted with love, delivered with care</p>
+                <button class="cta-btn" onclick="scrollToSection('products')">
+                    Explore Our Sweets
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Premium Collection</h2>
+                <p class="section-subtitle">Discover the finest traditional Indian sweets</p>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading delicious sweets...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error-state" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Unable to Load Products</h3>
+                <p>We're having trouble loading our sweet collection. Please check your connection and try again.</p>
+                <button class="retry-btn" onclick="loadProducts()">
+                    <i class="fas fa-redo"></i>
+                    Try Again
+                </button>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty" class="empty-state" style="display: none;">
+                <i class="fas fa-store-slash"></i>
+                <h3>No Products Available</h3>
+                <p>Our sweet collection is currently being updated. Please check back soon!</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="products-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="section-title">About Vijaya Jyothi Home Foods</h2>
+                <p class="about-text">
+                    For generations, we have been crafting authentic traditional Indian sweets using time-honored recipes 
+                    and the finest ingredients. Our commitment to quality and taste has made us a trusted name in 
+                    delivering the authentic flavors of India to your doorstep.
+                </p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-leaf"></i>
+                        <h3>Natural Ingredients</h3>
+                        <p>Made with pure, natural ingredients</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-heart"></i>
+                        <h3>Made with Love</h3>
+                        <p>Handcrafted with traditional methods</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shipping-fast"></i>
+                        <h3>Fresh Delivery</h3>
+                        <p>Delivered fresh to your home</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Cart -->
+    <div class="floating-cart" id="floating-cart" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" onclick="closeCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-content">
+            <!-- Empty Cart State -->
+            <div class="empty-cart" id="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h4>Your cart is empty</h4>
+                <p>Add some delicious sweets to get started!</p>
+            </div>
+            
+            <!-- Cart Items -->
+            <div class="cart-items" id="cart-items"></div>
+            
+            <!-- Cart Summary -->
+            <div class="cart-summary" id="cart-summary" style="display: none;">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery:</span>
+                    <span id="delivery-fee">Free</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="cart-total">₹0</span>
+                </div>
+                <button class="checkout-btn">
+                    <i class="fas fa-credit-card"></i>
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Options Modal -->
+    <div class="checkout-modal" id="checkout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose Your Order Method</h3>
+                <button class="close-modal" id="close-checkout-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>How would you like to place your order?</p>
+                <div class="checkout-options">
+                    <button class="checkout-option instagram-option" id="instagram-checkout">
+                        <i class="fab fa-instagram"></i>
+                        <span>Order through Instagram</span>
+                        <small>Send order details via Instagram DM</small>
+                    </button>
+                    <button class="checkout-option whatsapp-option" id="whatsapp-checkout">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Order through WhatsApp</span>
+                        <small>Send order details via WhatsApp</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary Modal -->
+    <div class="order-summary-modal" id="order-summary-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Order Summary</h3>
+                <button class="close-modal" id="close-summary-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="order-details" id="order-details"></div>
+                <div class="action-buttons">
+                    <button class="copy-order-btn" id="copy-order-btn">
+                        <i class="fas fa-copy"></i>
+                        Copy Order Details
+                    </button>
+                    <button class="proceed-btn" id="proceed-to-platform">
+                        <i class="fas fa-arrow-right"></i>
+                        <span id="proceed-text">Proceed to Instagram</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Vijaya Jyothi Home Foods</h3>
+                    <p>Bringing you the finest traditional Indian sweets since generations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/919493685339" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Vijaya Jyothi Home Foods. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
