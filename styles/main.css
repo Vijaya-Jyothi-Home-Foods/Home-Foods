@@ -112,6 +112,15 @@ p {
     color: var(--gray-600);
 }
 
+.logo {
+    display: flex;
+    gap: 8px;
+}
+.logo-img {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(91%) saturate(614%) hue-rotate(2deg) brightness(93%) contrast(94%);
+}
+
+
 /* Buttons */
 .btn {
     display: inline-flex;
