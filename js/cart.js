@@ -348,7 +348,7 @@ function updateCartDisplay() {
 function updateCartSummary() {
     const subtotal = getCartTotal();
     const deliveryFee = subtotal >= 500 ? 0 : 50; // Free delivery over ₹500
-    const total = subtotal + deliveryFee;
+    const total = subtotal;
     
     const cartSubtotal = document.getElementById('cart-subtotal');
     const deliveryFeeElement = document.getElementById('delivery-fee');
@@ -630,7 +630,7 @@ function generateOrderSummary(platform) {
 
     const subtotal = getCartTotal();
     const deliveryFee = 0; // Free delivery
-    const total = subtotal + deliveryFee;
+    const total = subtotal;
 
     orderHTML += `
         </div>
@@ -640,10 +640,7 @@ function generateOrderSummary(platform) {
                 <span>Subtotal:</span>
                 <span>₹${subtotal}</span>
             </div>
-            <div class="order-total-row">
-                <span>Delivery:</span>
-                <span>Free</span>
-            </div>
+            
             <div class="order-total-row">
                 <span>Total:</span>
                 <span>₹${total}</span>
@@ -720,7 +717,6 @@ function generateOrderText() {
     orderText += `${'-'.repeat(30)}\n`;
     orderText += `💰 Order Summary:\n`;
     orderText += `Subtotal: ₹${subtotal}\n`;
-    orderText += `Delivery: Free\n`;
     orderText += `Total: ₹${total}\n\n`;
     orderText += `📍 Please confirm your delivery address and preferred delivery time.\n`;
     orderText += `🙏 Thank you for choosing Vijaya Jyothi Home Foods!`;
