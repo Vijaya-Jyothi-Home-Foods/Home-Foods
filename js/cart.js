@@ -51,9 +51,6 @@ function setupCartEventListeners() {
             }
         }
     });
-
-    // Setup checkout modal event listeners
-    setupCheckoutModalListeners();
 }
 
 /**
@@ -349,11 +346,9 @@ function updateCartSummary() {
     const total = getCartTotal();
     
     const cartSubtotal = document.getElementById('cart-subtotal');
-    /* const deliveryFeeElement = document.getElementById('delivery-fee'); */
-    const cartTotal = document.getElementById('cart-total'); 
+    const cartTotal = document.getElementById('cart-total');
     
     if (cartSubtotal) cartSubtotal.textContent = formatCurrency(total);
-    
     if (cartTotal) cartTotal.textContent = formatCurrency(total);
 }
 
@@ -453,7 +448,7 @@ function getCartData() {
         items: [...Cart.items], // Return a copy
         itemCount: getCartItemCount(),
         subtotal: getCartTotal(),
-        total: getCartTotal() + (getCartTotal() >= 500 ? 0 : 50)
+        total: getCartTotal()
     };
 }
 
@@ -501,257 +496,6 @@ function validateCartItems() {
         
         showErrorToast('Some items in your cart are no longer available and have been removed.');
     }
-}
-
-/**
- * Setup checkout modal event listeners
- */
-function setupCheckoutModalListeners() {
-    // Checkout button click
-    document.addEventListener('click', (event) => {
-        if (event.target.closest('.checkout-btn')) {
-            event.preventDefault();
-            openCheckoutModal();
-        }
-    });
-
-    // Close checkout modal
-    document.getElementById('close-checkout-modal')?.addEventListener('click', closeCheckoutModal);
-
-    // Instagram checkout option
-    document.getElementById('instagram-checkout')?.addEventListener('click', () => {
-        selectCheckoutOption('instagram');
-    });
-
-    // WhatsApp checkout option
-    document.getElementById('whatsapp-checkout')?.addEventListener('click', () => {
-        selectCheckoutOption('whatsapp');
-    });
-
-    // Close order summary modal
-    document.getElementById('close-summary-modal')?.addEventListener('click', closeOrderSummaryModal);
-
-    // Copy order details
-    document.getElementById('copy-order-btn')?.addEventListener('click', copyOrderDetails);
-
-    // Proceed to platform
-    document.getElementById('proceed-to-platform')?.addEventListener('click', proceedToPlatform);
-
-    // Close modals when clicking outside
-    document.addEventListener('click', (event) => {
-        const checkoutModal = document.getElementById('checkout-modal');
-        const summaryModal = document.getElementById('order-summary-modal');
-        
-        if (event.target === checkoutModal) {
-            closeCheckoutModal();
-        }
-        if (event.target === summaryModal) {
-            closeOrderSummaryModal();
-        }
-    });
-}
-
-/**
- * Open checkout modal
- */
-function openCheckoutModal() {
-    if (Cart.items.length === 0) {
-        showErrorToast('Your cart is empty. Add some items before checkout.');
-        return;
-    }
-
-    const modal = document.getElementById('checkout-modal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-/**
- * Close checkout modal
- */
-function closeCheckoutModal() {
-    const modal = document.getElementById('checkout-modal');
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-/**
- * Select checkout option
- */
-function selectCheckoutOption(platform) {
-    closeCheckoutModal();
-    generateOrderSummary(platform);
-    openOrderSummaryModal(platform);
-}
-
-/**
- * Generate order summary
- */
-function generateOrderSummary(platform) {
-    const orderDetails = document.getElementById('order-details');
-    const proceedText = document.getElementById('proceed-text');
-    
-    // Update proceed button text
-    proceedText.textContent = platform === 'instagram' ? 'Proceed to Instagram' : 'Proceed to WhatsApp';
-    
-    // Generate order summary HTML
-    const currentDate = new Date().toLocaleDateString('en-IN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-
-    let orderHTML = `
-        <div class="order-header">
-            <h4>Vijaya Jyothi Home Foods</h4>
-            <div class="order-date">Order Date: ${currentDate}</div>
-        </div>
-        
-        <div class="order-items">
-    `;
-
-    Cart.items.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        orderHTML += `
-            <div class="order-item">
-                <div class="order-item-info">
-                    <div class="order-item-name">${item.name}</div>
-                    <div class="order-item-details">Quantity: ${item.quantity} × ₹${item.price} | Weight: ${item.weight}</div>
-                </div>
-                <div class="order-item-price">₹${itemTotal}</div>
-            </div>
-        `;
-    });
-
-    const subtotal = getCartTotal();
-   /*  const deliveryFee = 0; // Free delivery */
-    const total = getCartTotal;
-
-    orderHTML += `
-        </div>
-        
-        <div class="order-totals">
-            <div class="order-total-row">
-                <span>Subtotal:</span>
-                <span>₹${subtotal}</span>
-            </div>
-            /* <div class="order-total-row">
-                <span>Delivery:</span>
-                <span>Free</span>
-            </div> */
-            <div class="order-total-row">
-                <span>Total:</span>
-                <span>₹${total}</span>
-            </div>
-        </div>
-    `;
-
-    orderDetails.innerHTML = orderHTML;
-    
-    // Store platform selection for later use
-    orderDetails.dataset.platform = platform;
-}
-
-/**
- * Open order summary modal
- */
-function openOrderSummaryModal(platform) {
-    const modal = document.getElementById('order-summary-modal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-/**
- * Close order summary modal
- */
-function closeOrderSummaryModal() {
-    const modal = document.getElementById('order-summary-modal');
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-/**
- * Copy order details to clipboard
- */
-async function copyOrderDetails() {
-    try {
-        const orderText = generateOrderText();
-        await navigator.clipboard.writeText(orderText);
-        showSuccessToast('Order details copied to clipboard!');
-    } catch (error) {
-        console.error('Failed to copy order details:', error);
-        showErrorToast('Failed to copy order details. Please try again.');
-    }
-}
-
-/**
- * Generate order text for sharing
- */
-function generateOrderText() {
-    const currentDate = new Date().toLocaleDateString('en-IN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-
-    let orderText = `🍯 Vijaya Jyothi Home Foods - Order\n`;
-    orderText += `📅 Date: ${currentDate}\n\n`;
-    orderText += `📦 Order Items:\n`;
-    orderText += `${'-'.repeat(30)}\n`;
-
-    Cart.items.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        orderText += `${index + 1}. ${item.name}\n`;
-        orderText += `   Qty: ${item.quantity} × ₹${item.price} | Weight: ${item.weight}\n`;
-        orderText += `   Total: ₹${itemTotal}\n\n`;
-    });
-
-    const subtotal = getCartTotal();
-    const deliveryFee = 0;
-    const total = subtotal + deliveryFee;
-
-    orderText += `${'-'.repeat(30)}\n`;
-    orderText += `💰 Order Summary:\n`;
-    orderText += `Subtotal: ₹${subtotal}\n`;
-    /* orderText += `Delivery: Free\n`; */
-    orderText += `Total: ₹${total}\n\n`;
-    orderText += `📍 Please confirm your delivery address and preferred delivery time.\n`;
-    orderText += `🙏 Thank you for choosing Vijaya Jyothi Home Foods!`;
-
-    return orderText;
-}
-
-/**
- * Proceed to selected platform
- */
-function proceedToPlatform() {
-    const platform = document.getElementById('order-details').dataset.platform;
-    const orderText = generateOrderText();
-    
-    if (platform === 'instagram') {
-        // Open Instagram DM
-        const instagramUrl = 'https://www.instagram.com/vj_homefoods?igsh=cmQxMTMxamV5amhp';
-        window.open(instagramUrl, '_blank');
-        showSuccessToast('Instagram opened! Please send the copied order details via DM.');
-    } else if (platform === 'whatsapp') {
-        // Open WhatsApp with pre-filled message
-        const whatsappMessage = encodeURIComponent(orderText);
-        const whatsappUrl = `https://wa.me/919493685339?text=${whatsappMessage}`;
-        window.open(whatsappUrl, '_blank');
-        showSuccessToast('WhatsApp opened with your order details!');
-    }
-    
-    closeOrderSummaryModal();
-    closeCart();
-    
-    // Clear cart after successful order
-    setTimeout(() => {
-        clearCart();
-        showSuccessToast('Order placed successfully! We will contact you soon.');
-    }, 1000);
 }
 
 // Export for testing (if needed)
