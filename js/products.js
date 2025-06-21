@@ -22,7 +22,7 @@ const SAMPLE_PRODUCTS = [
         isNew: false,
         inStock: true,
         variants: [
-            { weight: '250g', price: 140, id: 'bellam-sunnundalu-250g' },
+            { weight: '250g', price: 140, id: 'bellam-sunnundalu-250g' }, 
             { weight: '500g', price: 260, id: 'bellam-sunnundalu-500g' },
             { weight: '1kg', price: 500, id: 'bellam-sunnundalu-1kg' }
         ]
