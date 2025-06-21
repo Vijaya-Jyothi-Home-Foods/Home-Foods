@@ -346,18 +346,14 @@ function updateCartDisplay() {
  * Update cart summary (totals)
  */
 function updateCartSummary() {
-    const subtotal = getCartTotal();
-    const deliveryFee = subtotal >= 500 ? 0 : 50; // Free delivery over ₹500
-    const total = subtotal + deliveryFee;
+    const total = getCartTotal();
     
     const cartSubtotal = document.getElementById('cart-subtotal');
-    const deliveryFeeElement = document.getElementById('delivery-fee');
-    const cartTotal = document.getElementById('cart-total');
+    /* const deliveryFeeElement = document.getElementById('delivery-fee'); */
+    const cartTotal = document.getElementById('cart-total'); 
     
-    if (cartSubtotal) cartSubtotal.textContent = formatCurrency(subtotal);
-    if (deliveryFeeElement) {
-        deliveryFeeElement.textContent = deliveryFee === 0 ? 'Free' : formatCurrency(deliveryFee);
-    }
+    if (cartSubtotal) cartSubtotal.textContent = formatCurrency(total);
+    
     if (cartTotal) cartTotal.textContent = formatCurrency(total);
 }
 
