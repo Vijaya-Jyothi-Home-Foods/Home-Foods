@@ -51,6 +51,13 @@ function setupCartEventListeners() {
             }
         }
     });
+
+    // Handle checkout button click
+    document.addEventListener('click', (event) => {
+        if (event.target.closest('.checkout-btn')) {
+            handleCheckout();
+        }
+    });
 }
 
 /**
@@ -496,6 +503,53 @@ function validateCartItems() {
         
         showErrorToast('Some items in your cart are no longer available and have been removed.');
     }
+}
+
+/**
+ * Handle checkout process
+ */
+function handleCheckout() {
+    if (Cart.items.length === 0) {
+        showErrorToast('Your cart is empty!');
+        return;
+    }
+
+    // Generate WhatsApp message
+    const cartData = getCartData();
+    const message = generateWhatsAppMessage(cartData);
+    
+    // WhatsApp number (replace with actual business number)
+    const phoneNumber = '919876543210'; // Replace with your actual WhatsApp business number
+    
+    // Create WhatsApp URL
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Show success message
+    showSuccessToast('Redirecting to WhatsApp...');
+}
+
+/**
+ * Generate WhatsApp message from cart data
+ */
+function generateWhatsAppMessage(cartData) {
+    let message = `🍯 *Order from Vijaya Jyothi Home Foods* 🍯\n\n`;
+    message += `📋 *Order Details:*\n`;
+    
+    cartData.items.forEach((item, index) => {
+        message += `${index + 1}. ${item.name}\n`;
+        message += `   Quantity: ${item.quantity}\n`;
+        message += `   Price: ₹${item.price} each\n`;
+        message += `   Subtotal: ₹${item.price * item.quantity}\n\n`;
+    });
+    
+    message += `💰 *Total Amount: ₹${cartData.total}*\n\n`;
+    message += `📱 Please confirm this order and share your delivery address.\n`;
+    message += `Thank you for choosing Vijaya Jyothi Home Foods! 🙏`;
+    
+    return message;
 }
 
 // Export for testing (if needed)
