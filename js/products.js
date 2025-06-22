@@ -52,7 +52,7 @@ const SAMPLE_PRODUCTS = [
         isNew: false,
         inStock: true,
         variants: [
-            { weight: '10 pieces/box', price: 180, id: 'bellam-putharekulu-10pieces' },
+            { weight: '10 pieces/box', price: 150, id: 'bellam-putharekulu-10pieces' },
             { weight: '10 pieces/box (Extra Dry Fruits)', price: 280, id: 'bellam-putharekulu-10pieces-dryfruits' },
             { weight: '20 pieces/box', price: 280, id: 'bellam-putharekulu-20pieces' },
             { weight: '20 pieces/box (Extra Dry Fruits)', price: 530, id: 'bellam-putharekulu-20pieces-dryfruits' }
