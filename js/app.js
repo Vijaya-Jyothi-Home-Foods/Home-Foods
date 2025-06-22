@@ -1,402 +1,299 @@
-/**
- * Main Application Controller
- * Handles app initialization, navigation, and global functionality
- */
-
 // Application state
 const App = {
-    isInitialized: false,
-    isLoading: false,
-    currentSection: 'home'
+  isInitialized: false,
+  isLoading: false,
+  currentSection: 'home'
 };
 
-/**
- * Initialize the application
- */
+// Initialize the application
 function initializeApp() {
-    if (App.isInitialized) return;
-    
-    console.log('Initializing Vijaya Jyothi Home Foods App...');
-    
-    try {
-        // Initialize products
-        initializeProducts();
-        
-        // Initialize cart
-        initializeCart();
-        
-        // Set up event listeners
-        setupEventListeners();
-        
-        // Load initial data
-        loadInitialData();
-        
-        App.isInitialized = true;
-        console.log('App initialized successfully');
-        
-    } catch (error) {
-        console.error('Failed to initialize app:', error);
-        showErrorToast('Failed to initialize application. Please refresh the page.');
-    }
+  if (App.isInitialized) return;
+
+  console.log("Initializing Vijaya Jyothi Home Foods App...");
+
+  try {
+    initializeProducts();
+    initializeCart();
+    setupEventListeners();
+    loadInitialData();
+    setupContactModal(); // 👈 Added contact modal support
+    App.isInitialized = true;
+    console.log("App initialized successfully");
+  } catch (error) {
+    console.error("Failed to initialize app:", error);
+    showErrorToast("Failed to initialize application. Please refresh the page.");
+  }
 }
 
-/**
- * Set up global event listeners
- */
+// Set up global event listeners
 function setupEventListeners() {
-    // Handle scroll events for header
-    window.addEventListener('scroll', handleScroll);
-    
-    // Handle resize events
-    window.addEventListener('resize', handleResize);
-    
-    // Handle keyboard navigation
-    document.addEventListener('keydown', handleKeyDown);
-    
-    // Handle visibility change (for localStorage sync)
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    // Handle online/offline status
-    window.addEventListener('online', handleOnlineStatus);
-    window.addEventListener('offline', handleOnlineStatus);
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('resize', handleResize);
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  window.addEventListener('online', handleOnlineStatus);
+  window.addEventListener('offline', handleOnlineStatus);
 }
 
-/**
- * Load initial application data
- */
+// Load initial data
 async function loadInitialData() {
-    try {
-        App.isLoading = true;
-        showLoadingState();
-        
-        // Load products (this will handle empty state)
-        await loadProducts();
-        
-        // Load cart from localStorage
-        loadCartFromStorage();
-        
-    } catch (error) {
-        console.error('Failed to load initial data:', error);
-        showErrorState('Failed to load application data');
-    } finally {
-        App.isLoading = false;
-        hideLoadingState();
-    }
+  try {
+    App.isLoading = true;
+    showLoadingState();
+    await loadProducts();
+    loadCartFromStorage();
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+    showErrorState("Failed to load application data");
+  } finally {
+    App.isLoading = false;
+    hideLoadingState();
+  }
 }
 
-/**
- * Handle scroll events
- */
+// Scroll handler
 function handleScroll() {
-    const header = document.querySelector('.header');
-    const scrollY = window.scrollY;
-    
-    if (scrollY > 50) {
-        header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-        header.style.boxShadow = 'none';
-    }
+  const header = document.querySelector('.header');
+  if (window.scrollY > 50) {
+    header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+    header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+  } else {
+    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+    header.style.boxShadow = 'none';
+  }
 }
 
-/**
- * Handle window resize events
- */
+// Resize handler
 function handleResize() {
-    // Close cart on mobile orientation change
-    if (window.innerWidth > 768 && isCartOpen()) {
-        // Keep cart open on desktop
-    } else if (window.innerWidth <= 480) {
-        // Adjust cart width on very small screens
-        const cartSidebar = document.getElementById('cart-sidebar');
-        if (cartSidebar) {
-            cartSidebar.style.maxWidth = '100%';
-        }
+  if (window.innerWidth <= 480) {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    if (cartSidebar) {
+      cartSidebar.style.maxWidth = '100%';
     }
+  }
 }
 
-/**
- * Handle keyboard navigation
- */
+// Keyboard navigation
 function handleKeyDown(event) {
-    // Close cart with Escape key
-    if (event.key === 'Escape' && isCartOpen()) {
-        closeCart();
-        return;
-    }
-    
-    // Scroll to sections with number keys
-    if (event.key >= '1' && event.key <= '3' && !event.ctrlKey && !event.altKey) {
-        const sections = ['products', 'about', 'contact'];
-        const sectionIndex = parseInt(event.key) - 1;
-        if (sections[sectionIndex]) {
-            scrollToSection(sections[sectionIndex]);
-        }
-    }
-}
+  if (event.key === 'Escape' && isCartOpen()) {
+    closeCart();
+    return;
+  }
 
-/**
- * Handle visibility change (tab switching)
- */
-function handleVisibilityChange() {
-    if (!document.hidden) {
-        // Tab became visible - sync cart data
-        loadCartFromStorage();
-        updateCartDisplay();
-    }
-}
-
-/**
- * Handle online/offline status
- */
-function handleOnlineStatus() {
-    const isOnline = navigator.onLine;
-    
-    if (isOnline) {
-        showSuccessToast('Connection restored');
-        // Retry loading if there was an error
-        if (document.getElementById('error').style.display !== 'none') {
-            loadProducts();
-        }
+  if (event.key >= '1' && event.key <= '3' && !event.ctrlKey && !event.altKey) {
+    const key = parseInt(event.key);
+    if (key === 3) {
+      const modal = document.getElementById("contactModal");
+      if (modal) modal.style.display = "block";
     } else {
-        showErrorToast('You are offline. Some features may not work.');
+      const sections = ['products', 'about'];
+      const sectionIndex = key - 1;
+      if (sections[sectionIndex]) {
+        scrollToSection(sections[sectionIndex]);
+      }
     }
+  }
 }
 
-/**
- * Scroll to a specific section
- */
+// Scroll to section
 function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        const headerHeight = document.querySelector('.header').offsetHeight;
-        const targetPosition = section.offsetTop - headerHeight - 20;
-        
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
-        
-        App.currentSection = sectionId;
-    }
+  const section = document.getElementById(sectionId);
+  if (section) {
+    const headerHeight = document.querySelector('.header').offsetHeight;
+    const targetPosition = section.offsetTop - headerHeight - 20;
+    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+    App.currentSection = sectionId;
+  }
 }
 
-/**
- * Show loading state
- */
+// Visibility change
+function handleVisibilityChange() {
+  if (!document.hidden) {
+    loadCartFromStorage();
+    updateCartDisplay();
+  }
+}
+
+// Online/offline events
+function handleOnlineStatus() {
+  const isOnline = navigator.onLine;
+  if (isOnline) {
+    showSuccessToast('Connection restored');
+    if (document.getElementById('error').style.display !== 'none') {
+      loadProducts();
+    }
+  } else {
+    showErrorToast('You are offline. Some features may not work.');
+  }
+}
+
+// Loading UI
 function showLoadingState() {
-    const loading = document.getElementById('loading');
-    const error = document.getElementById('error');
-    const empty = document.getElementById('empty');
-    const productsGrid = document.getElementById('products-grid');
-    
-    if (loading) loading.style.display = 'flex';
-    if (error) error.style.display = 'none';
-    if (empty) empty.style.display = 'none';
-    if (productsGrid) productsGrid.style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('error').style.display = 'none';
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'none';
 }
 
-/**
- * Hide loading state
- */
 function hideLoadingState() {
-    const loading = document.getElementById('loading');
-    if (loading) loading.style.display = 'none';
+  document.getElementById('loading').style.display = 'none';
 }
 
-/**
- * Show error state
- */
-function showErrorState(message = 'An error occurred') {
-    const loading = document.getElementById('loading');
-    const error = document.getElementById('error');
-    const empty = document.getElementById('empty');
-    const productsGrid = document.getElementById('products-grid');
-    
-    if (loading) loading.style.display = 'none';
-    if (error) {
-        error.style.display = 'flex';
-        const errorText = error.querySelector('p');
-        if (errorText) errorText.textContent = message;
-    }
-    if (empty) empty.style.display = 'none';
-    if (productsGrid) productsGrid.style.display = 'none';
+function showErrorState(message = "An error occurred") {
+  document.getElementById('loading').style.display = 'none';
+  const error = document.getElementById('error');
+  error.style.display = 'flex';
+  const errorText = error.querySelector('p');
+  if (errorText) errorText.textContent = message;
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'none';
 }
 
-/**
- * Show empty state
- */
 function showEmptyState() {
-    const loading = document.getElementById('loading');
-    const error = document.getElementById('error');
-    const empty = document.getElementById('empty');
-    const productsGrid = document.getElementById('products-grid');
-    
-    if (loading) loading.style.display = 'none';
-    if (error) error.style.display = 'none';
-    if (empty) empty.style.display = 'flex';
-    if (productsGrid) productsGrid.style.display = 'none';
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error').style.display = 'none';
+  document.getElementById('empty').style.display = 'flex';
+  document.getElementById('products-grid').style.display = 'none';
 }
 
-/**
- * Show products grid
- */
 function showProductsGrid() {
-    const loading = document.getElementById('loading');
-    const error = document.getElementById('error');
-    const empty = document.getElementById('empty');
-    const productsGrid = document.getElementById('products-grid');
-    
-    if (loading) loading.style.display = 'none';
-    if (error) error.style.display = 'none';
-    if (empty) empty.style.display = 'none';
-    if (productsGrid) productsGrid.style.display = 'grid';
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error').style.display = 'none';
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('products-grid').style.display = 'grid';
 }
 
-/**
- * Toast notification system
- */
+// Toast
 function showToast(message, type = 'info', duration = 3000) {
-    const toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) return;
-    
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="fas ${getToastIcon(type)}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    toastContainer.appendChild(toast);
-    
-    // Auto remove toast
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toastContainer.removeChild(toast);
-                }
-            }, 300);
-        }
-    }, duration);
-    
-    // Allow manual dismissal
-    toast.addEventListener('click', () => {
-        if (toast.parentNode) {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toastContainer.removeChild(toast);
-                }
-            }, 300);
-        }
-    });
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <i class="fas ${getToastIcon(type)}"></i>
+      <span>${message}</span>
+    </div>`;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (toast.parentNode) container.removeChild(toast);
+      }, 300);
+    }
+  }, duration);
+
+  toast.addEventListener('click', () => {
+    if (toast.parentNode) {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (toast.parentNode) container.removeChild(toast);
+      }, 300);
+    }
+  });
 }
 
 function showSuccessToast(message, duration = 3000) {
-    showToast(message, 'success', duration);
+  showToast(message, 'success', duration);
 }
 
 function showErrorToast(message, duration = 5000) {
-    showToast(message, 'error', duration);
+  showToast(message, 'error', duration);
 }
 
 function getToastIcon(type) {
-    switch (type) {
-        case 'success': return 'fa-check-circle';
-        case 'error': return 'fa-exclamation-circle';
-        case 'warning': return 'fa-exclamation-triangle';
-        default: return 'fa-info-circle';
-    }
+  switch (type) {
+    case 'success': return 'fa-check-circle';
+    case 'error': return 'fa-exclamation-circle';
+    case 'warning': return 'fa-exclamation-triangle';
+    default: return 'fa-info-circle';
+  }
 }
 
-/**
- * Utility functions
- */
+// Utils
 function formatCurrency(amount) {
-    return `₹${amount.toLocaleString('en-IN')}`;
+  return `₹${amount.toLocaleString('en-IN')}`;
 }
 
 function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
 }
 
 function throttle(func, limit) {
-    let inThrottle;
-    return function executedFunction(...args) {
-        if (!inThrottle) {
-            func.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
+  let inThrottle;
+  return function (...args) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
 }
 
-/**
- * Error boundary
- */
+// Contact Modal Setup
+function setupContactModal() {
+  const modal = document.getElementById("contactModal");
+  const btn = document.getElementById("contactBtn");
+  const closeBtn = modal?.querySelector(".close");
+
+  if (btn && modal && closeBtn) {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      modal.style.display = "block";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
+}
+
+// Error boundary
 window.addEventListener('error', (event) => {
-    console.error('Global error:', event.error);
-    
-    if (!App.isInitialized) {
-        showErrorToast('Application failed to load. Please refresh the page.');
-    }
+  console.error("Global error:", event.error);
+  if (!App.isInitialized) {
+    showErrorToast("Application failed to load. Please refresh the page.");
+  }
 });
 
 window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
-    
-    // Don't show toast for every promise rejection, but log it
-    if (event.reason && event.reason.message) {
-        console.error('Promise rejection details:', event.reason.message);
-    }
+  console.error("Unhandled rejection:", event.reason);
 });
 
-/**
- * Performance monitoring
- */
-function measurePerformance(name, fn) {
-    const start = performance.now();
-    const result = fn();
-    const end = performance.now();
-    console.log(`${name} took ${end - start} milliseconds`);
-    return result;
-}
-
-/**
- * Initialize app when DOM is ready
- */
+// Initialize
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
+  document.addEventListener("DOMContentLoaded", initializeApp);
 } else {
-    initializeApp();
+  initializeApp();
 }
 
-// Export for testing (if needed)
+// Export for testing
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        App,
-        initializeApp,
-        scrollToSection,
-        showToast,
-        showSuccessToast,
-        showErrorToast,
-        formatCurrency,
-        debounce,
-        throttle
-    };
+  module.exports = {
+    App,
+    initializeApp,
+    scrollToSection,
+    showToast,
+    showSuccessToast,
+    showErrorToast,
+    formatCurrency,
+    debounce,
+    throttle
+  };
 }

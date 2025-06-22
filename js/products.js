@@ -15,7 +15,7 @@ const SAMPLE_PRODUCTS = [
     {
         id: 'bellam-sunnundalu',
         name: 'Bellam Sunnundalu',
-        description: 'Traditional sesame seed balls made with jaggery, rich in nutrients and authentic flavor.',
+        description: 'Traditional Andhra laddus made from roasted urad dal, mixed with jaggery, rich in nutrients and authentic flavor.',
         image: './Attachments/Sunnundalu_Bellam.jpg',
         category: 'traditional',
         isPopular: true,
@@ -30,7 +30,7 @@ const SAMPLE_PRODUCTS = [
     {
         id: 'sugar-sunnundalu',
         name: 'Sugar Sunnundalu',
-        description: 'Sweet sesame seed balls made with sugar, perfect for festivals and celebrations.',
+        description: 'Delicious Andhra-style laddus made with roasted urad dal, blended with sugar — a perfect treat for festivals and special occasions.',
         image: './Attachments/Sugar_Sunnundalu.jpeg',
         category: 'traditional',
         isPopular: false,
@@ -52,7 +52,7 @@ const SAMPLE_PRODUCTS = [
         isNew: false,
         inStock: true,
         variants: [
-            { weight: '10 pieces/box', price: 150, id: 'bellam-putharekulu-10pieces' },
+            { weight: '10 pieces/box', price: 180, id: 'bellam-putharekulu-10pieces' },
             { weight: '10 pieces/box (Extra Dry Fruits)', price: 280, id: 'bellam-putharekulu-10pieces-dryfruits' },
             { weight: '20 pieces/box', price: 280, id: 'bellam-putharekulu-20pieces' },
             { weight: '20 pieces/box (Extra Dry Fruits)', price: 530, id: 'bellam-putharekulu-20pieces-dryfruits' }
@@ -92,7 +92,7 @@ const SAMPLE_PRODUCTS = [
     {
         id: 'motichoor-laddu',
         name: 'Motichoor Laddu',
-        description: 'Classic round sweet made with fine gram flour pearls and sugar syrup.',
+        description: 'Motichoor laddu is a beloved Indian sweet made from tiny, pearl-like drops of besan called boondi. These delicate fritters are deep-fried and then soaked in a sugar syrup infused with fragrant spices like cardamom',
         image: './Attachments/Mothi_choor.jpg',
         category: 'traditional',
         isPopular: true,
