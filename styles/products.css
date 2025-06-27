@@ -214,7 +214,9 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-color);
-    font-family: var(--font-primary);
+    font-family: 'Poppins', sans-serif;
+    margin-top: 0.5rem;
+    display: block;
 }
 
 .price-original {
