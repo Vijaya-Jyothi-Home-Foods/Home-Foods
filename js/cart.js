@@ -1,4 +1,5 @@
-/**
+
+  /**
  * Cart Management System
  * Handles cart operations, localStorage persistence, and UI updates
  */
@@ -510,73 +511,90 @@ function validateCartItems() {
 /**
  * Setup checkout modal event listeners
  */
-function setupCheckoutModalListeners() {
-    // Checkout button click
-    document.addEventListener('click', (event) => {
-        if (event.target.closest('.checkout-btn')) {
-            event.preventDefault();
-            openCheckoutModal();
-        }
-    });
+function setupDeliveryStep() {
+    const step1 = document.getElementById("address-step-1");
+    const step2 = document.getElementById("address-step-2");
+    const showBtn = document.getElementById("show-address-step");
 
-    // Close checkout modal
-    document.getElementById('close-checkout-modal')?.addEventListener('click', closeCheckoutModal);
-
-    // Instagram checkout option
-    document.getElementById('instagram-checkout')?.addEventListener('click', () => {
-        selectCheckoutOption('instagram');
-    });
-
-    // WhatsApp checkout option
-    document.getElementById('whatsapp-checkout')?.addEventListener('click', () => {
-        selectCheckoutOption('whatsapp');
-    });
-
-    // Close order summary modal
-    document.getElementById('close-summary-modal')?.addEventListener('click', closeOrderSummaryModal);
-
-    // Copy order details
-    document.getElementById('copy-order-btn')?.addEventListener('click', copyOrderDetails);
-
-    // Proceed to platform
-    document.getElementById('proceed-to-platform')?.addEventListener('click', proceedToPlatform);
-
-    // Close modals when clicking outside
-    document.addEventListener('click', (event) => {
-        const checkoutModal = document.getElementById('checkout-modal');
-        const summaryModal = document.getElementById('order-summary-modal');
-        
-        if (event.target === checkoutModal) {
-            closeCheckoutModal();
-        }
-        if (event.target === summaryModal) {
-            closeOrderSummaryModal();
-        }
-    });
-}
-
-/**
- * Open checkout modal
- */
-function openCheckoutModal() {
-    if (Cart.items.length === 0) {
-        showErrorToast('Your cart is empty. Add some items before checkout.');
-        return;
+    if (showBtn && step1 && step2) {
+        showBtn.addEventListener("click", () => {
+            step1.classList.add("hidden");
+            step2.classList.remove("hidden");
+            document.getElementById("state")?.focus();
+        });
     }
 
-    const modal = document.getElementById('checkout-modal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const finalCheckout = document.getElementById("final-checkout");
+    if (finalCheckout) {
+        finalCheckout.addEventListener("click", () => {
+            const state = document.getElementById("state")?.value.trim();
+            const city = document.getElementById("city")?.value.trim();
+            const pincode = document.getElementById("pincode")?.value.trim();
+
+            if (!state || !city || !pincode) {
+                showErrorToast("Please fill in all address fields.");
+                return;
+            }
+
+            openCheckoutModal();
+        });
+    }
 }
 
-/**
- * Close checkout modal
- */
-function closeCheckoutModal() {
-    const modal = document.getElementById('checkout-modal');
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
+document.addEventListener("DOMContentLoaded", () => {
+    setupDeliveryStep();
+});
+
+// Override default checkout button handler to avoid premature modal
+function setupCheckoutModalListeners() {
+    document.addEventListener("click", (event) => {
+        const checkoutBtn = event.target.closest(".checkout-btn");
+        if (!checkoutBtn) return;
+
+        if (checkoutBtn.id !== "final-checkout") {
+            event.preventDefault();
+            // Ignore unless it's the validated path
+        }
+    });
+
+    document.getElementById("close-checkout-modal")?.addEventListener("click", closeCheckoutModal);
+    document.getElementById("instagram-checkout")?.addEventListener("click", () => selectCheckoutOption("instagram"));
+    document.getElementById("whatsapp-checkout")?.addEventListener("click", () => selectCheckoutOption("whatsapp"));
+    document.getElementById("close-summary-modal")?.addEventListener("click", closeOrderSummaryModal);
+    document.getElementById("copy-order-btn")?.addEventListener("click", copyOrderDetails);
+    document.getElementById("proceed-to-platform")?.addEventListener("click", proceedToPlatform);
+
+    document.addEventListener("click", (event) => {
+        const checkoutModal = document.getElementById("checkout-modal");
+        const summaryModal = document.getElementById("order-summary-modal");
+
+        if (event.target === checkoutModal) closeCheckoutModal();
+        if (event.target === summaryModal) closeOrderSummaryModal();
+    });
 }
+
+function openCheckoutModal() {
+    if (Cart.items.length === 0) {
+        showErrorToast("Your cart is empty. Add some items before checkout.");
+        return;
+    }
+    const modal = document.getElementById("checkout-modal");
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+function closeCheckoutModal() {
+    const modal = document.getElementById("checkout-modal");
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+}
+
+function selectCheckoutOption(platform) {
+    closeCheckoutModal();
+    generateOrderSummary(platform);
+    openOrderSummaryModal(platform);
+}
+
 
 /**
  * Select checkout option
@@ -733,7 +751,7 @@ function proceedToPlatform() {
     
     if (platform === 'instagram') {
         // Open Instagram DM
-        const instagramUrl = 'https://www.instagram.com/vj_homefoods?igsh=cmQxMTMxamV5amhp';
+        const instagramUrl = 'https://www.instagram.com/vj_homemadefoods?igsh=MWRzd3M0MHQwOXFieA==';
         window.open(instagramUrl, '_blank');
         showSuccessToast('Instagram opened! Please send the copied order details via DM.');
     } else if (platform === 'whatsapp') {
@@ -767,7 +785,41 @@ if (typeof module !== 'undefined' && module.exports) {
         closeCart,
         getCartTotal,
         getCartItemCount,
-        getCartData,
-        importCartData
+        getCartData: () => ({
+            items: [...Cart.items],
+            itemCount: getCartItemCount(),
+            subtotal: getCartTotal(),
+            total: getCartTotal()
+        }),
+        importCartData(cartData) {
+            try {
+                if (cartData && Array.isArray(cartData.items)) {
+                    Cart.items = cartData.items.filter(item =>
+                        item.productId &&
+                        item.name &&
+                        typeof item.price === 'number' &&
+                        typeof item.quantity === 'number' &&
+                        item.quantity > 0
+                    );
+                    saveCartToStorage();
+                    updateCartDisplay();
+                    updateFloatingCartBadge();
+                    console.log('Cart data imported successfully');
+                }
+            } catch (error) {
+                console.error('Failed to import cart data:', error);
+            }
+        },
+        validateCartItems() {
+            const validItems = Cart.items.filter(item => getProductById(item.productId));
+            if (validItems.length !== Cart.items.length) {
+                console.log('Removed invalid items from cart');
+                Cart.items = validItems;
+                saveCartToStorage();
+                updateCartDisplay();
+                updateFloatingCartBadge();
+                showErrorToast('Some items in your cart are no longer available and have been removed.');
+            }
+        }
     };
 }

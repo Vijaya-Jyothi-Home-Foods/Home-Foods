@@ -16,7 +16,7 @@ const SAMPLE_PRODUCTS = [
         id: 'bellam-sunnundalu',
         name: 'Bellam Sunnundalu',
         description: 'Traditional Andhra laddus made from roasted urad dal, mixed with jaggery, rich in nutrients and authentic flavor.',
-        image: './Attachments/Sunnundalu_Bellam.png',
+        image: './Attachments/Sunnundalu_Bellam.jpg',
         category: 'traditional',
         isPopular: true,
         isNew: false,
