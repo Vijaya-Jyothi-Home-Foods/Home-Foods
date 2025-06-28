@@ -384,6 +384,33 @@
     font-size: 1.25rem;
 }
 
+/* New one */
+.hidden {
+  display: none;
+}
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.address-form label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+}
+
+.address-form input,
+.address-form select {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+}
+
+
 /* Checkout Button */
 .checkout-btn {
     width: 100%;
