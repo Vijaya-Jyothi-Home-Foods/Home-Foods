@@ -852,7 +852,7 @@
     }
     
     .action-buttons {
-        gap: var(--spacing-sm);
+        gap: var(--spacing-sm);  
     }
 }
 

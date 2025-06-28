@@ -789,7 +789,7 @@ if (typeof module !== 'undefined' && module.exports) {
             items: [...Cart.items],
             itemCount: getCartItemCount(),
             subtotal: getCartTotal(),
-            total: getCartTotal()
+            total: getCartTotal()  
         }),
         importCartData(cartData) {
             try {
