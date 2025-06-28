@@ -511,39 +511,69 @@ function validateCartItems() {
 /**
  * Setup checkout modal event listeners
  */
-function setupDeliveryStep() {
-    const step1 = document.getElementById("address-step-1");
-    const step2 = document.getElementById("address-step-2");
-    const showBtn = document.getElementById("show-address-step");
-
-    if (showBtn && step1 && step2) {
-        showBtn.addEventListener("click", () => {
-            step1.classList.add("hidden");
-            step2.classList.remove("hidden");
-            document.getElementById("state")?.focus();
-        });
-    }
-
-    const finalCheckout = document.getElementById("final-checkout");
-    if (finalCheckout) {
-        finalCheckout.addEventListener("click", () => {
-            const state = document.getElementById("state")?.value.trim();
-            const city = document.getElementById("city")?.value.trim();
-            const pincode = document.getElementById("pincode")?.value.trim();
-
-            if (!state || !city || !pincode) {
-                showErrorToast("Please fill in all address fields.");
-                return;
-            }
-
-            openCheckoutModal();
-        });
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     setupDeliveryStep();
 });
+
+function setupDeliveryStep() {
+  const step1 = document.getElementById("address-step-1");
+  const step2 = document.getElementById("address-step-2");
+  const showBtn = document.getElementById("show-address-step");
+  const toggleBtn = document.getElementById("toggle-address-step");
+
+  if (showBtn && step1 && step2 && toggleBtn) {
+        showBtn.addEventListener("click", () => {
+            step1.classList.add("hidden");
+            step2.classList.remove("hidden");
+
+            toggleBtn.classList.remove("hidden");
+
+            // Show fields by default
+            toggleAddressFields(false);
+
+            // Ensure chevron is rotated correctly
+            toggleBtn.classList.add("expanded");
+});
+
+
+    toggleBtn.addEventListener("click", () => {
+  const fieldWrapper = document.getElementById("address-fields");
+  const isHidden = fieldWrapper.style.display === "none";
+
+  toggleAddressFields(!isHidden);
+  toggleBtn.classList.toggle("expanded", !isHidden);
+});
+
+
+  }
+
+  const finalCheckout = document.getElementById("final-checkout");
+  if (finalCheckout) {
+    finalCheckout.addEventListener("click", () => {
+      const state = document.getElementById("state")?.value.trim();
+      const city = document.getElementById("city")?.value.trim();
+      const address = document.getElementById("address")?.value.trim();
+      const pincode = document.getElementById("pincode")?.value.trim();
+
+      if (!state || !city || !address || !pincode) {
+        showErrorToast("Please fill in all address fields.");
+        return;
+      }
+
+      openCheckoutModal();
+    });
+  }
+}
+
+// Helper to hide/show form fields
+function toggleAddressFields(hide) {
+  const fieldWrapper = document.getElementById("address-fields");
+  if (fieldWrapper) {
+    fieldWrapper.style.display = hide ? "none" : "block";
+  }
+}
+
+
 
 // Override default checkout button handler to avoid premature modal
 function setupCheckoutModalListeners() {
@@ -771,6 +801,7 @@ function proceedToPlatform() {
         showSuccessToast('Order placed successfully! We will contact you soon.');
     }, 1000);
 }
+
 
 // Export for testing (if needed)
 if (typeof module !== 'undefined' && module.exports) {

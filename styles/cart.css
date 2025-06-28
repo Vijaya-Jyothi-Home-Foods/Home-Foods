@@ -389,25 +389,60 @@
   display: none;
 }
 
-.address-form {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 1rem;
 }
 
-.address-form label {
+.form-group label {
   font-weight: 500;
   font-size: 0.9rem;
   color: var(--gray-700);
 }
 
-.address-form input,
-.address-form select {
+.form-group input,
+.form-group select {
   padding: 0.6rem 1rem;
   font-size: 1rem;
   border: 1px solid var(--gray-300);
   border-radius: var(--radius-md);
+}
+
+.btn-secondary {
+    align-items: end;
+    justify-content: end;
+    border: none;
+}
+
+.address-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: fit-content;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.3s ease;
+ font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif
+}
+
+.address-toggle:hover {
+  background-color: #f2f2f2;
+}
+
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+/* This will rotate the arrow upward */
+.address-toggle.expanded .chevron-icon {
+  transform: rotate(180deg);
 }
 
 
@@ -428,6 +463,10 @@
     justify-content: center;
     gap: var(--spacing-sm);
     min-height: 56px;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .checkout-btn:hover {
