@@ -747,6 +747,17 @@
     font-size: 1.25rem;
 }
 
+.order-address h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--gray-900);
+    font-size: 1.10rem;
+}
+
+.order-address {
+    margin-top: var(--spacing-lg);
+    margin-block-end: -10%;
+}
+
 .order-date {
     color: var(--gray-600);
     font-size: 0.875rem;
@@ -770,6 +781,8 @@
 
 .order-item-info {
     flex: 1;
+    margin-left: 0%;
+    text-align: left;
 }
 
 .order-item-name {

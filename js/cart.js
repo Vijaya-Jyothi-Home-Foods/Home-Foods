@@ -641,6 +641,11 @@ function selectCheckoutOption(platform) {
 function generateOrderSummary(platform) {
     const orderDetails = document.getElementById('order-details');
     const proceedText = document.getElementById('proceed-text');
+    const state = document.getElementById("state")?.value.trim() || "-";
+    const city = document.getElementById("city")?.value.trim() || "-";
+    const address = document.getElementById("address")?.value.trim() || "-";
+    const pincode = document.getElementById("pincode")?.value.trim() || "-";
+
     
     // Update proceed button text
     proceedText.textContent = platform === 'instagram' ? 'Proceed to Instagram' : 'Proceed to WhatsApp';
@@ -695,6 +700,15 @@ function generateOrderSummary(platform) {
             </div>
         </div>
     `;
+    orderHTML += `
+        </div>
+
+        <div class="order-address">
+            <h4>Delivery Address</h4>
+            <p>${address}, ${city}, ${state} - ${pincode}</p>
+        </div>
+    `;
+
 
     orderDetails.innerHTML = orderHTML;
     
@@ -751,6 +765,12 @@ function generateOrderText() {
     orderText += `📦 Order Items:\n`;
     orderText += `${'-'.repeat(30)}\n`;
 
+    const state = document.getElementById("state")?.value.trim() || "-";
+    const city = document.getElementById("city")?.value.trim() || "-";
+    const address = document.getElementById("address")?.value.trim() || "-";
+    const pincode = document.getElementById("pincode")?.value.trim() || "-";
+
+
     Cart.items.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         orderText += `${index + 1}. ${item.name}\n`;
@@ -766,6 +786,8 @@ function generateOrderText() {
     orderText += `💰 Order Summary:\n`;
     orderText += `Subtotal: ₹${subtotal}\n`;
     orderText += `Total: ₹${total}\n\n`;
+    orderText += `🏠 Delivery Address:\n`;
+    orderText += `${address}, ${city}, ${state} - ${pincode}\n\n`;
     orderText += `📍 Please confirm your delivery address and preferred delivery time.\n`;
     orderText += `🙏 Thank you for choosing Vijaya Jyothi Home Foods!`;
 
