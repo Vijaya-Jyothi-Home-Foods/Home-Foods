@@ -779,7 +779,7 @@
     border-bottom: none;
 }
 
-.order-item-info {
+.order-item-info {    
     flex: 1;
     margin-left: 0%;
     text-align: left;

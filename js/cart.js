@@ -777,7 +777,7 @@ function generateOrderText() {
         orderText += `   Qty: ${item.quantity} × ₹${item.price} | Weight: ${item.weight}\n`;
         orderText += `   Total: ₹${itemTotal}\n\n`;
     });
-
+   
     const subtotal = getCartTotal();
     const deliveryFee = 0;
     const total = subtotal + deliveryFee;
