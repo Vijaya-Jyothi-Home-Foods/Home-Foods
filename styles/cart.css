@@ -445,6 +445,13 @@
   transform: rotate(180deg);
 }
 
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: none;
+}
+
 
 /* Checkout Button */
 .checkout-btn {

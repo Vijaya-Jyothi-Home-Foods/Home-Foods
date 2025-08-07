@@ -23,7 +23,7 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 140, id: 'bellam-sunnundalu-250g' }, 
-            { weight: '500g', price: 260, id: 'bellam-sunnundalu-500g' },
+            { weight: '500g', price: 280, id: 'bellam-sunnundalu-500g' },
             { weight: '1kg', price: 500, id: 'bellam-sunnundalu-1kg' }
         ]
     },
@@ -54,8 +54,6 @@ const SAMPLE_PRODUCTS = [
         variants: [
             { weight: '10 pieces/box', price: 150, id: 'bellam-putharekulu-10pieces' },
             { weight: '10 pieces/box (Extra Dry Fruits)', price: 280, id: 'bellam-putharekulu-10pieces-dryfruits' },
-            { weight: '20 pieces/box', price: 280, id: 'bellam-putharekulu-20pieces' },
-            { weight: '20 pieces/box (Extra Dry Fruits)', price: 530, id: 'bellam-putharekulu-20pieces-dryfruits' }
         ]
     },
     {
@@ -70,8 +68,6 @@ const SAMPLE_PRODUCTS = [
         variants: [
             { weight: '10 pieces/box', price: 130, id: 'sugar-putharekulu-10pieces' },
             { weight: '10 pieces/box (Extra Dry Fruits)', price: 250, id: 'sugar-putharekulu-10pieces-dryfruits' },
-            { weight: '20 pieces/box', price: 250, id: 'sugar-putharekulu-20pieces' },
-            { weight: '20 pieces/box (Extra Dry Fruits)', price: 480, id: 'sugar-putharekulu-20pieces-dryfruits' }
         ]
     },
     {
@@ -85,8 +81,8 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 100, id: 'kobbari-undalu-250g' },
-            { weight: '500g', price: 180, id: 'kobbari-undalu-500g' },
-            { weight: '1kg', price: 350, id: 'kobbari-undalu-1kg' }
+            { weight: '500g', price: 200, id: 'kobbari-undalu-500g' },
+            { weight: '1kg', price: 380, id: 'kobbari-undalu-1kg' }
         ]
     },
     {
@@ -100,8 +96,8 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 100, id: 'motichoor-laddu-250g' },
-            { weight: '500g', price: 180, id: 'motichoor-laddu-500g' },
-            { weight: '1kg', price: 350, id: 'motichoor-laddu-1kg' }
+            { weight: '500g', price: 200, id: 'motichoor-laddu-500g' },
+            { weight: '1kg', price: 380, id: 'motichoor-laddu-1kg' }
         ]
     },
     {
@@ -115,8 +111,8 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 100, id: 'bundhi-laddu-250g' },
-            { weight: '500g', price: 180, id: 'bundhi-laddu-500g' },
-            { weight: '1kg', price: 350, id: 'bundhi-laddu-1kg' }
+            { weight: '500g', price: 200, id: 'bundhi-laddu-500g' },
+            { weight: '1kg', price: 380, id: 'bundhi-laddu-1kg' }
         ]
     },
     {
@@ -130,8 +126,8 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 100, id: 'ravva-laddu-250g' },
-            { weight: '500g', price: 180, id: 'ravva-laddu-500g' },
-            { weight: '1kg', price: 350, id: 'ravva-laddu-1kg' }
+            { weight: '500g', price: 200, id: 'ravva-laddu-500g' },
+            { weight: '1kg', price: 380, id: 'ravva-laddu-1kg' }
         ]
     },
     {
@@ -145,7 +141,7 @@ const SAMPLE_PRODUCTS = [
         inStock: true,
         variants: [
             { weight: '250g', price: 100, id: 'mavidi-tandri-250g' },
-            { weight: '500g', price: 180, id: 'mavidi-tandri-500g' },
+            { weight: '500g', price: 200, id: 'mavidi-tandri-500g' },
             { weight: '1kg', price: 350, id: 'mavidi-tandri-1kg' }
         ]
     },
@@ -159,9 +155,9 @@ const SAMPLE_PRODUCTS = [
         isNew: false,
         inStock: true,
         variants: [
-            { weight: '250g', price: 200, id: 'palakova-250g' },
-            { weight: '500g', price: 380, id: 'palakova-500g' },
-            { weight: '1kg', price: 750, id: 'palakova-1kg' }
+            { weight: '250g', price: 220, id: 'palakova-250g' },
+            { weight: '500g', price: 420, id: 'palakova-500g' },
+            { weight: '1kg', price: 780, id: 'palakova-1kg' }
         ]
     },
     {

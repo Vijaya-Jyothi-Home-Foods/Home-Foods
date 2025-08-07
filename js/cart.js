@@ -513,6 +513,7 @@ function validateCartItems() {
  */
 document.addEventListener("DOMContentLoaded", () => {
     setupDeliveryStep();
+    setupLiveAddressValidation();
 });
 
 function setupDeliveryStep() {
@@ -542,6 +543,8 @@ function setupDeliveryStep() {
 
   toggleAddressFields(!isHidden);
   toggleBtn.classList.toggle("expanded", !isHidden);
+
+  setupLiveAddressValidation();
 });
 
 
@@ -550,18 +553,54 @@ function setupDeliveryStep() {
   const finalCheckout = document.getElementById("final-checkout");
   if (finalCheckout) {
     finalCheckout.addEventListener("click", () => {
-      const state = document.getElementById("state")?.value.trim();
-      const city = document.getElementById("city")?.value.trim();
-      const address = document.getElementById("address")?.value.trim();
-      const pincode = document.getElementById("pincode")?.value.trim();
+  const state = document.getElementById("state")?.value.trim();
+  const cityInput = document.getElementById("city");
+  const addressInput = document.getElementById("address");
+  const pincodeInput = document.getElementById("pincode");
 
-      if (!state || !city || !address || !pincode) {
-        showErrorToast("Please fill in all address fields.");
-        return;
-      }
+  const city = cityInput?.value.trim();
+  const address = addressInput?.value.trim();
+  const pincode = pincodeInput?.value.trim();
 
-      openCheckoutModal();
-    });
+  // Clear inline errors
+  document.getElementById("city-error").style.display = "none";
+  document.getElementById("address-error").style.display = "none";
+  document.getElementById("pincode-error").style.display = "none";
+
+  // 1. Required fields check
+  if (!state || !city || !address || !pincode) {
+    showErrorToast("Please fill in all address fields.");
+    return;
+  }
+
+  // 2. Field content validation
+  let invalidFields = [];
+
+  if (!/^[a-zA-Z\s]+$/.test(city)) {
+    document.getElementById("city-error").style.display = "block";
+    invalidFields.push("City");
+  }
+
+  if (address.length === 0 || address.length > 200) {
+    document.getElementById("address-error").style.display = "block";
+    invalidFields.push("Address");
+  }
+
+  if (!/^\d{6}$/.test(pincode)) {
+    document.getElementById("pincode-error").style.display = "block";
+    invalidFields.push("Pincode");
+  }
+
+  // 3. Show ONE combined toast
+  if (invalidFields.length > 0) {
+    showErrorToast(`Please correct: ${invalidFields.join(", ")}`);
+    return;
+  }
+
+  // ✅ All good
+  openCheckoutModal();
+});
+
   }
 }
 
@@ -875,4 +914,71 @@ if (typeof module !== 'undefined' && module.exports) {
             }
         }
     };
+}
+function setupLiveAddressValidation() {
+  const cityInput = document.getElementById("city");
+  const addressInput = document.getElementById("address");
+  const pincodeInput = document.getElementById("pincode");
+
+  cityInput.addEventListener("input", () => {
+    const value = cityInput.value.trim();
+    const errorEl = document.getElementById("city-error");
+
+    if (!/^[a-zA-Z\s]*$/.test(value)) {
+      errorEl.textContent = "Enter a valid City";
+      errorEl.style.display = "block";
+    } else {
+      errorEl.textContent = "";
+      errorEl.style.display = "none";
+    }
+  });
+
+  addressInput.addEventListener("input", () => {
+    const value = addressInput.value.trim();
+    const errorEl = document.getElementById("address-error");
+
+    if (value.length > 200) {
+      errorEl.textContent = "Address should not exceed 200 characters.";
+      errorEl.style.display = "block";
+    } else {
+      errorEl.textContent = "";
+      errorEl.style.display = "none";
+    }
+  });
+
+  pincodeInput.addEventListener("input", () => {
+    const value = pincodeInput.value.trim();
+    const errorEl = document.getElementById("pincode-error");
+
+    if (!/^\d{0,6}$/.test(value)) {
+      errorEl.textContent = "Enter a valid Pincode";
+      errorEl.style.display = "block";
+    } else if (value.length > 0 && value.length !== 6) {
+      errorEl.textContent = "Pincode should be in format XXXXXX";
+      errorEl.style.display = "block";
+    } else {
+      errorEl.textContent = "";
+      errorEl.style.display = "none";
+    }
+  });
+}
+
+function showErrorToast(message) {
+  // Remove any existing toast
+  const container = document.getElementById("toast-container");
+  container.innerHTML = "";
+
+  const toast = document.createElement("div");
+  toast.className = "toast toast-error";
+  toast.innerHTML = `
+    <i class="fas fa-exclamation-circle"></i>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  // Auto-remove after 4 seconds
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
 }
