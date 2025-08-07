@@ -190,7 +190,7 @@
                 </button>
 
 
-                <div id="address-fields">
+                <div id="address-fields"> 
                     <div class="form-group">
                     <label for="state">State*</label> 
                     <select id="state" required>
@@ -229,16 +229,19 @@
                     <div class="form-group">
                     <label for="city">City*</label>
                     <input id="city" type="text" required />
+                    <div id="city-error" class="error-message"></div>
                     </div>
 
                     <div class="form-group">
                     <label for="address">Address*</label>
                     <input id="address" type="text" required />
+                    <div id="address-error" class="error-message"></div>
                     </div>
 
                     <div class="form-group">
                     <label for="pincode">Pincode*</label>
                     <input id="pincode" type="text" required />
+                    <div id="pincode-error" class="error-message"></div>
                     </div>
                 </div>
                     <button class="checkout-btn" id="final-checkout" style="margin-top: 1rem;">
