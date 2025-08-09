@@ -157,7 +157,7 @@ const SAMPLE_PRODUCTS = [
         variants: [
             { weight: '250g', price: 220, id: 'palakova-250g' },
             { weight: '500g', price: 420, id: 'palakova-500g' },
-            { weight: '1kg', price: 780, id: 'palakova-1kg' }
+            { weight: '1kg', price: 800, id: 'palakova-1kg' } 
         ]
     },
     {
@@ -170,8 +170,8 @@ const SAMPLE_PRODUCTS = [
         isNew: false,
         inStock: true,
         variants: [
-            { weight: '10 pieces', price: 100, id: 'bobbatlu-10pieces' },
-            { weight: '20 pieces', price: 180, id: 'bobbatlu-20pieces' }
+            { weight: '10 pieces', price: 120, id: 'bobbatlu-10pieces' },
+            { weight: '20 pieces', price: 220, id: 'bobbatlu-20pieces' }
         ]
     }
 ];
