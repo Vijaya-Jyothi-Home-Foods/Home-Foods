@@ -1,6 +1,12 @@
-# Vijaya-Jyothi Home Foods
+# ![Vijaya-Jyothi Home Foods Logo](path/to/logo.png)
+
+## Vijaya-Jyothi Home Foods
 
 Vijaya-Jyothi Home Foods offers a wide range of authentic, homemade food products prepared with high-quality ingredients, traditional methods, and strict hygiene standards.
+
+### Visit Us  
+🌐 Website: [vijaya-jyothi-home-foods.github.io/Home-Foods](https://vijaya-jyothi-home-foods.github.io/Home-Foods/)  
+---
 
 ## 🛍️ Product List (Quality & Prices)
 
@@ -33,8 +39,16 @@ Vijaya-Jyothi Home Foods offers a wide range of authentic, homemade food product
 
 ✅ **All items are homemade**  
 ✅ **Prepared fresh per order**  
-✅ **No artificial colors or preservatives**  
+✅ **No artificial colours or preservatives**  
 ✅ **Premium quality ingredients**
 
-For orders or inquiries, please contact the Vijaya-Jyothi Home Foods team.
+---
 
+### 📞 Contact Us  
+**Phone / WhatsApp:** +91 94936 85339  
+**Instagram:** [@vj_homemadefoods](https://www.instagram.com/vj_homemadefoods/?igsh=MWRzd3M0MHQwOXFieA%3D%3D#)  
+**Website:** [vijaya-jyothi-home-foods.github.io/Home-Foods](https://vijaya-jyothi-home-foods.github.io/Home-Foods/)  
+
+---
+
+Thank you for choosing Vijaya-Jyothi Home Foods. We’re delighted to serve you with homemade goodness!  
