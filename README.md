@@ -1,4 +1,4 @@
-# ![Vijaya-Jyothi Home Foods Logo](path/to/logo.png)
+# ![Vijaya-Jyothi Home Foods Logo](./home_logo.png)
 
 ## Vijaya-Jyothi Home Foods
 
